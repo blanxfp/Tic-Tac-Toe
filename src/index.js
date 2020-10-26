@@ -61,6 +61,7 @@ import './index.css';
         history: [{
           squares: Array(9).fill(null),
           position: [0,0],
+          player: 'x',
         }],
         stepNumber: 0,
         xIsNext: true,
@@ -82,6 +83,7 @@ import './index.css';
         history: history.concat([{
           squares: squares,
           position: position,
+          player: this.state.xIsNext ? 'x' : 'o',
         }]),
         stepNumber: history.length,
         xIsNext: !this.state.xIsNext,
@@ -97,6 +99,36 @@ import './index.css';
 
     switchButton() {
       this.state.orderASC === true ? this.setState({orderASC: false}) :  this.setState({orderASC: true});
+    }
+
+    setStyle (move, winner, currentPlayer, stepNumber) {
+      let styles = {}
+      let firstStyle;
+      let secondStyle;
+      console.log(currentPlayer);
+      if(stepNumber === move){
+        firstStyle = {
+          fontWeight: 'bold',
+        }
+      } else {
+        firstStyle = {
+          fontWeight: 'normal',
+        }
+      }
+      styles = Object.assign(styles,firstStyle)
+      if (currentPlayer === winner){
+        
+        secondStyle = {
+          color: 'red',
+        }
+      } else {
+        secondStyle = {
+          color: 'black',
+        }
+      }
+      styles = Object.assign(styles,secondStyle)
+
+      return styles
     }
     
     render() {
@@ -115,13 +147,18 @@ import './index.css';
         if(! this.state.orderASC) {
           move = Math.abs(move + 1 - length);
         }
+        console.log(step);
+        const sytle = this.setStyle(move, winner, step.player, stepNumber);
         const desc = move ?
           'Go to move #' + move + ' click in position (column,row): ' + step.position :
           'Go to game start';
+
+          
         return (
           <li key={move}>
             <button
-              style={ stepNumber === move ? { fontWeight: 'bold' } : { fontWeight: 'normal' } }
+              className = {this.state.xIsNext ? 'o' : 'x'}
+              style={sytle}
               onClick={() => this.jumpTo(move)}>{desc}
             </button>
           </li>
