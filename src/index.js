@@ -142,12 +142,13 @@ import './index.css';
       const stepNumber = this.state.stepNumber;
       const current = history[stepNumber];
       const winner = calculateWinner(current.squares);
+      
       const length = history.length;
+
       const moves = history2.map((step, move) => {
         if(! this.state.orderASC) {
           move = Math.abs(move + 1 - length);
         }
-        console.log(step);
         const sytle = this.setStyle(move, winner, step.player, stepNumber);
         const desc = move ?
           'Go to move #' + move + ' click in position (column,row): ' + step.position :
@@ -168,6 +169,8 @@ import './index.css';
       let status;
       if(winner) {
         status = 'Winner: ' + winner;
+      } else if(length === 10 && !winner) {
+        status = 'Empate';
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'x' : 'o');
       }
