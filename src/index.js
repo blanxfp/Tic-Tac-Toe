@@ -33,9 +33,6 @@ import './index.css';
       )
     }
 
-
-
-  
     render() {
       // Declaramos la variable vacía
       let squares = [];
@@ -67,6 +64,7 @@ import './index.css';
         }],
         stepNumber: 0,
         xIsNext: true,
+        orderASC: true,
       };
     }
 
@@ -96,15 +94,27 @@ import './index.css';
         xIsNext: (step % 2) === 0,
       });
     }
+
+    switchButton() {
+      this.state.orderASC === true ? this.setState({orderASC: false}) :  this.setState({orderASC: true});
+    }
     
     render() {
-      const history = this.state.history;
+      let history = this.state.history;
+      let history2;
+      if(! this.state.orderASC) {
+        history2 = [...history].reverse();
+      } else {
+        history2 = [...history];
+      }
       const stepNumber = this.state.stepNumber;
       const current = history[stepNumber];
       const winner = calculateWinner(current.squares);
-      const moves = history.map((step, move) => {
-        console.log(step)
-
+      const length = history.length;
+      const moves = history2.map((step, move) => {
+        if(! this.state.orderASC) {
+          move = Math.abs(move + 1 - length);
+        }
         const desc = move ?
           'Go to move #' + move + ' click in position (column,row): ' + step.position :
           'Go to game start';
@@ -124,6 +134,11 @@ import './index.css';
       } else {
         status = 'Next player: ' + (this.state.xIsNext ? 'x' : 'o');
       }
+      let buttonText = 'Switch order';
+      let button =
+      <button onClick={(i) => this.switchButton(i)}>
+          {buttonText}
+      </button>
 
       return (
         <div className="game">
@@ -136,6 +151,7 @@ import './index.css';
           <div className="game-info">
             <div>{status}</div>
             <ol>{moves}</ol>
+            {button}
           </div>
         </div>
       );
